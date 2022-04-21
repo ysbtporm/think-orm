@@ -937,6 +937,10 @@ abstract class PDOConnection extends Connection
         // 生成SQL语句
         $sql = $this->builder->insert($query);
 
+        //添加监听事件
+        $flag = $this->db->trigger('before_insert', $query,true);
+        if($flag === true) return 0;
+
         // 执行操作
         $result = '' == $sql ? 0 : $this->pdoExecute($query, $sql, $query->getBind());
 
@@ -982,6 +986,11 @@ abstract class PDOConnection extends Connection
         }
 
         $options = $query->parseOptions();
+
+        //添加监听事件
+        $flag = $this->db->trigger('before_insert_all', $query,true);
+        if($flag === true) return 0;
+
         $replace = !empty($options['replace']);
 
         if (0 === $limit && count($dataSet) >= 5000) {
@@ -1045,6 +1054,10 @@ abstract class PDOConnection extends Connection
     public function update(BaseQuery $query): int
     {
         $query->parseOptions();
+
+        //添加监听事件
+        $flag = $this->db->trigger('before_update', $query,true);
+        if($flag === true) return 0;
 
         // 生成UPDATE SQL语句
         $sql = $this->builder->update($query);
