@@ -988,6 +988,8 @@ abstract class PDOConnection extends Connection
         $options = $query->parseOptions();
 
         //添加监听事件
+        $query->setOption('dataSet', $dataSet);
+        $query->setOption('dataSetLimit', $limit);
         $flag = $this->db->trigger('before_insert_all', $query,true);
         if($flag === true) return 0;
 
